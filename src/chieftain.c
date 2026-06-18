@@ -22,6 +22,9 @@ void chieftain_init(chieftain_t *self, valhalla_t *valhalla)
     
     self->vikings_esperando = 0;
     sem_init(&self->fila_espera, 0, 0);
+
+    self->vikings_que_ja_comeram = 0;
+    sem_init(&self->preces_barrier, 0, 0);
     
     plog("[chieftain] Initialized\n");
 
@@ -107,23 +110,34 @@ int chieftain_acquire_seat_plates(chieftain_t *self, int berserker)
 void chieftain_release_seat_plates(chieftain_t *self, int pos)
 {
     pthread_mutex_lock(&self->mesa_mutex);
+    
     self->mesa[pos] = 0; // Marca a cadeira como livre
+    
     int prato1 = self->prato1_da_cadeira[pos];
     int prato2 = self->prato2_da_cadeira[pos];
+    
     if (prato1 != -1) {
         self->pratos[prato1] = 0; // Marca o prato como livre
     }
     if (prato2 != -1) {
         self->pratos[prato2] = 0; // Marca o prato como livre
     }
+    
     self->prato1_da_cadeira[pos] = -1;
     self->prato2_da_cadeira[pos] = -1;
-    if (self->vikings_esperando > 0) {
-        self->vikings_esperando--;
+    
+    while (self->vikings_esperando > 0) {
         sem_post(&self->fila_espera);
+        self->vikings_esperando--;
     }
+    
+    self->vikings_que_ja_comeram++;
+    
+    if (self->vikings_que_ja_comeram == config.horde_size){
+        sem_post(&self->preces_barrier);
+    }
+    
     pthread_mutex_unlock(&self->mesa_mutex);
-
 }
 
 god_t chieftain_get_god(chieftain_t *self)

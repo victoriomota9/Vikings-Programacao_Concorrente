@@ -26,6 +26,9 @@
         pthread_mutex_t mesa_mutex; /* Mutex para proteger o acesso à mesa e aos pratos. */
         sem_t fila_espera; /* Semáforo para controlar o número de vikings na mesa. */
         int vikings_esperando; /* Contador de vikings esperando para sentar. */
+
+        int vikings_que_ja_comeram; /* Contador de vikings que já comeram. */
+        sem_t preces_barrier; /* Semáforo para controlar a barreira de preces. */
     } chieftain_t;
 
     /*============================================================================*
