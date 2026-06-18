@@ -1,6 +1,6 @@
 #ifndef __CHIEFTAIN_H__
 #define __CHIEFTAIN_H__
-
+    #include <semaphore.h>
     #include "config.h"
     #include "valhalla.h"
 
@@ -20,6 +20,11 @@
         /* TODO: Adicione aqui os atributos que achar necessários para implementar o
         comportamento do chieftain. Esses atributos deverão ser usados pelas funções
         do chieftain. */
+        int *mesa; /* Array que representa a mesa e as cadeiras ocupadas. (0 = livre, 1 = normal, 2 = berserker ) */
+        int *pratos; /* Array que representa os pratos ocupados. (0 = livre, 1 = ocupado)*/
+
+        pthread_mutex_t mesa_mutex; /* Mutex para proteger o acesso à mesa e aos pratos. */
+        sem_t *viking_semaforo; /* Semáforo para controlar o número de vikings na mesa. */
     } chieftain_t;
 
     /*============================================================================*
