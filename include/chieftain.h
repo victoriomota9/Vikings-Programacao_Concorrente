@@ -16,15 +16,16 @@
     typedef struct chieftain
     {
         valhalla_t *valhalla;   /* Referência para valhalla.  */
-        
-        /* TODO: Adicione aqui os atributos que achar necessários para implementar o
-        comportamento do chieftain. Esses atributos deverão ser usados pelas funções
-        do chieftain. */
+
         int *mesa; /* Array que representa a mesa e as cadeiras ocupadas. (0 = livre, 1 = normal, 2 = berserker ) */
         int *pratos; /* Array que representa os pratos ocupados. (0 = livre, 1 = ocupado)*/
 
+        int *prato1_da_cadeira; /* Array que mapeia cada cadeira para o índice do primeiro prato associado a ela. */ 
+        int *prato2_da_cadeira; /* Array que mapeia cada cadeira para o índice do segundo prato associado a ela. */
+
         pthread_mutex_t mesa_mutex; /* Mutex para proteger o acesso à mesa e aos pratos. */
-        sem_t *viking_semaforo; /* Semáforo para controlar o número de vikings na mesa. */
+        sem_t fila_espera; /* Semáforo para controlar o número de vikings na mesa. */
+        int vikings_esperando; /* Contador de vikings esperando para sentar. */
     } chieftain_t;
 
     /*============================================================================*
