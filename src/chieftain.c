@@ -106,7 +106,24 @@ int chieftain_acquire_seat_plates(chieftain_t *self, int berserker)
 
 void chieftain_release_seat_plates(chieftain_t *self, int pos)
 {
-    /* TODO: Implementar! */
+    pthread_mutex_lock(&self->mesa_mutex);
+    self->mesa[pos] = 0; // Marca a cadeira como livre
+    int prato1 = self->prato1_da_cadeira[pos];
+    int prato2 = self->prato2_da_cadeira[pos];
+    if (prato1 != -1) {
+        self->pratos[prato1] = 0; // Marca o prato como livre
+    }
+    if (prato2 != -1) {
+        self->pratos[prato2] = 0; // Marca o prato como livre
+    }
+    self->prato1_da_cadeira[pos] = -1;
+    self->prato2_da_cadeira[pos] = -1;
+    if (self->vikings_esperando > 0) {
+        self->vikings_esperando--;
+        sem_post(&self->fila_espera);
+    }
+    pthread_mutex_unlock(&self->mesa_mutex);
+
 }
 
 god_t chieftain_get_god(chieftain_t *self)
