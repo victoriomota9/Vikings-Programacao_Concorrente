@@ -77,14 +77,14 @@ int chieftain_acquire_seat_plates(chieftain_t *self, int berserker)
                     if (self->pratos[prato_meio] == 0) {
                         if (p1 == -1) {
                             p1 = prato_meio;
-                        } else {
+                        } else if (p2 == -1) {
                             p2 = prato_meio;
                         }
                     }
                     if (self->pratos[prato_dir] == 0) {
                         if (p1 == -1) {
                             p1 = prato_dir;
-                        } else{
+                        } else if (p2 == -1) {
                             p2 = prato_dir;
                         }
                     }
