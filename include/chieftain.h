@@ -23,7 +23,13 @@
         int *prato1_da_cadeira; /* Array que mapeia cada cadeira para o índice do primeiro prato associado a ela. */ 
         int *prato2_da_cadeira; /* Array que mapeia cada cadeira para o índice do segundo prato associado a ela. */
 
+        /*Importante para o caso que o viking 1 solicitar o deus, autorizar e antes de realizar a prece (prayers[god]++),
+        o viking 2 solicitar o mesmo deus, mas podendo não ser autorizado */
+        int preces_autorizadas[NUMBER_OF_GODS]; /* Controla o número de preces autorizadas para cada deus. */
+
         pthread_mutex_t mesa_mutex; /* Mutex para proteger o acesso à mesa e aos pratos. */
+        pthread_mutex_t autorizacao_de_rezar_mutex; /* Mutex para proteger a autorização de rezar. */
+
         sem_t fila_espera; /* Semáforo para controlar o número de vikings na mesa. */
         int vikings_esperando; /* Contador de vikings esperando para sentar. */
 

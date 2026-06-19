@@ -30,6 +30,7 @@
         /* TODO: Adicione aqui os atributos que achar necessários para implementar o
         comportamento de valhalla. Esses atributos deverão ser usados pelas funções
         de valhalla. */
+        pthread_mutex_t valhalla_mutex; /* Mutex para proteger o contador das preces. */
     } valhalla_t;
 
     /*============================================================================*
