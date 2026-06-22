@@ -18,7 +18,8 @@ void chieftain_init(chieftain_t *self, valhalla_t *valhalla)
         self->prato1_da_cadeira[i] = -1; // -1 indica que não há prato associado
         self->prato2_da_cadeira[i] = -1; // -1 indica que não há prato associado
     }
-    for (int i = 0; i < NUMBER_OF_GODS; i++) {
+    for (int i = 0; i < NUMBER_OF_GODS; i++)
+    {
         self->preces_autorizadas[i] = 0;
     }
 
@@ -157,6 +158,7 @@ void chieftain_release_seat_plates(chieftain_t *self, int pos)
     self->prato1_da_cadeira[pos] = -1;
     self->prato2_da_cadeira[pos] = -1;
 
+    /* Broadcast -> "acorda" todos os vikings para verificar se há um novo lugar*/
     while (self->vikings_esperando > 0)
     {
         sem_post(&self->fila_espera);
@@ -221,14 +223,14 @@ god_t chieftain_get_god(chieftain_t *self)
 
 void chieftain_finalize(chieftain_t *self)
 {
-    free(self->mesa);
-    free(self->pratos);
-    free(self->prato1_da_cadeira);
-    free(self->prato2_da_cadeira);
     pthread_mutex_destroy(&self->mesa_mutex);
     pthread_mutex_destroy(&self->autorizacao_de_rezar_mutex);
     sem_destroy(&self->fila_espera);
     sem_destroy(&self->preces_barrier);
+    free(self->mesa);
+    free(self->pratos);
+    free(self->prato1_da_cadeira);
+    free(self->prato2_da_cadeira);
 
     plog("[chieftain] Finalized\n");
 }
