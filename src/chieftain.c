@@ -41,7 +41,6 @@ int chieftain_acquire_seat_plates(chieftain_t *self, int berserker)
     pthread_mutex_lock(&self->mesa_mutex);
     while (1)
     {
-        int achou_lugar = 0;
         int cadeira = -1;
 
         for (int i = 0; i < config.table_size; i++)
@@ -56,8 +55,8 @@ int chieftain_acquire_seat_plates(chieftain_t *self, int berserker)
                 {
                     cadeira = i;
                     self->mesa[i] = berserker ? 2 : 1; // 1 = normal, 2 = berserker
-                    self->pratos[p1] = 1; // 1 = ocupado
-                    self->pratos[p2] = 1; // 1 = ocupado
+                    self->pratos[p1] = 1;              // 1 = ocupado
+                    self->pratos[p2] = 1;              // 1 = ocupado
                     self->prato1_da_cadeira[cadeira] = p1;
                     self->prato2_da_cadeira[cadeira] = p2;
 
@@ -128,7 +127,8 @@ god_t chieftain_get_god(chieftain_t *self)
     {
         god = rand() % NUMBER_OF_GODS;
 
-        if (can_pray_god(self, god)){
+        if (can_pray_god(self, god))
+        {
             self->preces_autorizadas[god]++;
             has_god = 1;
         }
@@ -181,7 +181,7 @@ int try_take_plates(chieftain_t *self, int pos, int *p1, int *p2)
         pratos_livres++;
     if (self->pratos[pos_prato_dir] == 0)
         pratos_livres++;
-    
+
     if (pratos_livres < 2)
         return 0;
 
@@ -219,27 +219,28 @@ int try_take_plates(chieftain_t *self, int pos, int *p1, int *p2)
 int can_pray_god(chieftain_t *self, god_t god)
 {
     if (!valhalla_is_super(god))
+    {
+        int rival = valhalla_get_rival(god);
+        int maximo_permitido = (self->preces_autorizadas[rival] == 0) ? 1 : (int)ceil(self->preces_autorizadas[rival] * (1.0 + RIVAL_TOLERANCE_RATE));
+
+        if (self->preces_autorizadas[god] + 1 <= maximo_permitido) // +1 para a prece atual
         {
-            int rival = valhalla_get_rival(god);
-            int maximo_permitido = (self->preces_autorizadas[rival] == 0) ? 1 : (int)ceil(self->preces_autorizadas[rival] * (1.0 + RIVAL_TOLERANCE_RATE));
-            /* self->preces_autorizadas[god] + 1 (prece atual)*/
-            if (self->preces_autorizadas[god] + 1 <= maximo_permitido)
-            {
-                return 1;
-            }
+            return 1;
         }
-        else
+    }
+    else
+    {
+        int conta_preces = 0;
+        for (int i = 0; i < NUMBER_OF_GODS - 2; i++)
         {
-            int conta_preces = 0;
-            for (int i = 0; i < NUMBER_OF_GODS - 2; i++)
-            {
-                conta_preces += self->preces_autorizadas[i];
-            }
-            int maximo_permitido = (conta_preces == 0) ? 1 : (int)ceil(conta_preces * (1.0 + SUPER_GOD_TOLERANCE_RATE));
-            if (self->preces_autorizadas[god] + 1 <= maximo_permitido)
-            {
-                return 1;
-            }
+            conta_preces += self->preces_autorizadas[i];
         }
+        int maximo_permitido = (conta_preces == 0) ? 1 : (int)ceil(conta_preces * (1.0 + SUPER_GOD_TOLERANCE_RATE));
+        
+        if (self->preces_autorizadas[god] + 1 <= maximo_permitido)
+        {
+            return 1;
+        }
+    }
     return 0;
 }

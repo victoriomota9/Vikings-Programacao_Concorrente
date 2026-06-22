@@ -13,7 +13,6 @@ void valhalla_init(valhalla_t *self)
     for (int i = 0; i < NUMBER_OF_GODS; i++)
         self->prayers[i] = 0;
 
-    /* TODO: Adicionar código aqui se necessário! */
     pthread_mutex_init(&self->valhalla_mutex, NULL);
 
     plog("[valhalla] Initialized\n");
@@ -21,7 +20,6 @@ void valhalla_init(valhalla_t *self)
 
 void valhalla_finalize(valhalla_t *self)
 {
-    /* TODO: Adicionar código aqui se necessário! */
     pthread_mutex_destroy(&self->valhalla_mutex);
 
     plog("[valhalla] Finalized\n");
