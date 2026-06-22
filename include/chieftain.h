@@ -97,4 +97,29 @@
     * serem usadas em arquivos que incluem esse header.                          *
     *============================================================================*/
 
+    /**
+     * @brief Verifica se uma cadeira é segura para um viking.
+     *
+     * @param self O chieftain.
+     * @param pos Índice da cadeira.
+     * @param berserker Se igual a 1 indica que o viking é um berserker.
+     *
+     * @returns 1 se a cadeira é segura, 0 caso contrário.
+     */
+    extern int is_seat_safe(chieftain_t *self, int pos, int berserker);
+
+    /**
+     * @brief Tenta adquirir dois pratos para a cadeira especificada.
+     * 
+     * @param self O chieftain.
+     * @param pos Índice da cadeira.
+     * @param p1 Ponteiro para o primeiro prato.
+     * @param p2 Ponteiro para o segundo prato.
+     *
+     * @returns 1 se os pratos foram adquiridos, 0 caso contrário.
+     */
+    extern int try_take_plates(chieftain_t *self, int pos, int *p1, int *p2);
+
+    extern int can_pray_god(chieftain_t *self, god_t god);
+
 #endif /*__CHIEFTAIN_H__*/
