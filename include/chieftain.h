@@ -120,6 +120,14 @@
      */
     extern int try_take_plates(chieftain_t *self, int pos, int *p1, int *p2);
 
+    /**
+     * @brief Verifica se um deus pode ser rezado.
+     * 
+     * @param self O chieftain.
+     * @param god O deus a ser verificado.
+     *
+     * @returns 1 se o deus pode ser rezado, 0 caso contrário.
+     */
     extern int can_pray_god(chieftain_t *self, god_t god);
 
 #endif /*__CHIEFTAIN_H__*/

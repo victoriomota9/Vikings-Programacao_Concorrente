@@ -49,9 +49,8 @@ int chieftain_acquire_seat_plates(chieftain_t *self, int berserker)
             {
                 int p1, p2;
                 int seguro = is_seat_safe(self, i, berserker);
-                int plates_acquired = try_take_plates(self, i, &p1, &p2);
 
-                if (seguro && plates_acquired)
+                if (seguro && try_take_plates(self, i, &p1, &p2))
                 {
                     cadeira = i;
                     self->mesa[i] = berserker ? 2 : 1; // 1 = normal, 2 = berserker
