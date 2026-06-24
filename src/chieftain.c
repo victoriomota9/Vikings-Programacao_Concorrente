@@ -111,27 +111,21 @@ void chieftain_release_seat_plates(chieftain_t *self, int pos)
 
 god_t chieftain_get_god(chieftain_t *self)
 {
-    /*Wait para esperar o ultimo viking (da função chieftain_release_seat_plates) terminar de comer para rezar*/
+    /*Wait para esperar o último viking (da função chieftain_release_seat_plates) terminar de comer para rezar*/
     sem_wait(&self->preces_barrier);
     /*Quando acontece post lá na função chieftain_release_seat_plates a barreira abre para rezar e SOMENTE UM viking passa para rezar*/
     /*Aqui abre a barreira para outro viking poder rezar*/
     sem_post(&self->preces_barrier);
 
     pthread_mutex_lock(&self->autorizacao_de_rezar_mutex);
-
-    int has_god = 0;
-    god_t god;
-
-    while (!has_god)
+    
+    god_t god = rand() % NUMBER_OF_GODS;
+    while (!can_pray_god(self, god)) 
     {
-        god = rand() % NUMBER_OF_GODS;
-
-        if (can_pray_god(self, god))
-        {
-            self->preces_autorizadas[god]++;
-            has_god = 1;
-        }
+        god = (god + 1) % NUMBER_OF_GODS;
     }
+    self->preces_autorizadas[god]++;
+    
     pthread_mutex_unlock(&self->autorizacao_de_rezar_mutex);
     return god;
 }
